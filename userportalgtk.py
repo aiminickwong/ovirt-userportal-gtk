@@ -10,6 +10,8 @@ import os
 import subprocess
 from threading import Thread
 import dispatcher
+import urllib2
+import tempfile
 
 global dispatcher
 dispatcher = dispatcher.OvirtApi()
@@ -40,9 +42,22 @@ class Client:
         username = self._ent_auth_user.get_text()
         password = self._ent_auth_pass.get_text()
 
-        login, msg = dispatcher.login(url=url,
-                                      username=username,
-                                      password=password)
+        try:
+            cert = urllib2.urlopen(url+"/ovirt-engine/ca.crt").read()
+            cert_file = tempfile.NamedTemporaryFile(delete=False)
+            cert_file
+            cert_file.write(cert)
+            cert_file.close()
+
+            ca_file = cert_file.name
+        except:
+            ca_file = None
+
+
+        login, msg = dispatcher.login(url,
+                                      username,
+                                      password,
+                                      ca_file)
 
         if login:
             self._window1.hide()

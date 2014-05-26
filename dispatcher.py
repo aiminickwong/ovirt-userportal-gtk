@@ -4,10 +4,13 @@ from ovirtsdk.infrastructure.errors import RequestError, ConnectionError
 api = None
 
 class OvirtApi(object):
-    def login(self, url, username, password):
+    def login(self, url, username, password, ca_file):
         global api
         try:
-            api = API(url=url, username=username, password=password, filter=True)
+            api = API(url=url,
+                      username=username,
+                      password=password,
+                      ca_file=ca_file)
         except RequestError as reqErr:
             return False, "Login error"
         except ConnectionError as conErr:
