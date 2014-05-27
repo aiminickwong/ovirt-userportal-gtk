@@ -3,6 +3,7 @@ from ovirtsdk.infrastructure.errors import RequestError, ConnectionError
 
 api = None
 
+
 class OvirtApi(object):
     def login(self, url, username, password, ca_file):
         global api

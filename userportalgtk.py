@@ -32,9 +32,9 @@ class Client:
         port = "port="+str(self._port)+"&" if self._port else ""
         sport = "tls-port="+str(self._sport)+"&" if self._sport else ""
         uri = "spice://%s/?%s%spassword=%s" % (self._host,
-                                                port,
-                                                sport,
-                                                ticket)
+                                               port,
+                                               sport,
+                                               ticket)
         cmd = ["spicy", "--uri", uri]
 
         if self._ca_file is not None:
