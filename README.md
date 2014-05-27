@@ -10,3 +10,8 @@ Dependencies:
 ~~~
  $ sudo yum install spice-gtk-tools
 ~~~
+
+Run:
+~~~
+~/ovirt-userportal-gtk/userportalgtk.py
+~~~
