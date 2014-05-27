@@ -106,15 +106,15 @@ class Client:
             self._lab_Status.set_text(state)
 
             if "rhel" in os:
-                self._img_So.set_from_file("images/rhel.png")
+                self._img_So.set_from_file(self._dir + "/images/rhel.png")
             elif "ubuntu" in os:
-                self._img_So.set_from_file("images/ubuntu.png")
+                self._img_So.set_from_file(self._dir + "/images/ubuntu.png")
             elif "other" in os:
-                self._img_So.set_from_file("images/linux.png")
+                self._img_So.set_from_file(self._dir + "/images/linux.png")
             elif "windows" in os:
-                self._img_So.set_from_file("images/win.png")
+                self._img_So.set_from_file(self._dir + "/images/win.png")
             else:
-                self._img_So.set_from_file("images/ovirt.png")
+                self._img_So.set_from_file(self._dir + "/images/ovirt.png")
 
             if state == "up" or state == "powering_up":
                 self._checkbutton1.set_sensitive(True)
@@ -151,38 +151,40 @@ class Client:
 
     def __init__(self):
         gtk.gdk.threads_init()
-        self.gladefile = os.getenv('HOME')+"/ovirt-userportal-gtk/userportalgtk.glade"
-        self.wTree = gtk.glade.XML(self.gladefile)
-        self._window1 = self.wTree.get_widget("window1")
-        self._window2 = self.wTree.get_widget("window2")
+        self._dir = os.path.dirname(os.path.abspath(__file__))
+        self._gladefile = "%s/%s" % (self._dir, "userportalgtk.glade")
+        self._wTree = gtk.glade.XML(self._gladefile)
+
+        self._window1 = self._wTree.get_widget("window1")
+        self._window2 = self._wTree.get_widget("window2")
         if (self._window1):
             self._window1.connect("destroy", self.Quit)
         if (self._window2):
             self._window2.connect("destroy", self.Quit)
 
-        self._btn_auth_ok = self.wTree.get_widget("button1")
-        self._btn_auth_cancel = self.wTree.get_widget("button2")
-        self._ent_auth_user = self.wTree.get_widget("entry1")
-        self._ent_auth_pass = self.wTree.get_widget("entry2")
-        self._ent_auth_server = self.wTree.get_widget("entry3")
-        self._sta_auth = self.wTree.get_widget("statusbar1")
-        self._sta_main = self.wTree.get_widget("statusbar2")
+        self._btn_auth_ok = self._wTree.get_widget("button1")
+        self._btn_auth_cancel = self._wTree.get_widget("button2")
+        self._ent_auth_user = self._wTree.get_widget("entry1")
+        self._ent_auth_pass = self._wTree.get_widget("entry2")
+        self._ent_auth_server = self._wTree.get_widget("entry3")
+        self._sta_auth = self._wTree.get_widget("statusbar1")
+        self._sta_main = self._wTree.get_widget("statusbar2")
 
-        self._lab_Smp = self.wTree.get_widget("label7")
-        self._lab_Memory = self.wTree.get_widget("label9")
-        self._lab_Display = self.wTree.get_widget("label11")
-        self._lab_Usb = self.wTree.get_widget("label13")
-        self._lab_Status = self.wTree.get_widget("label15")
+        self._lab_Smp = self._wTree.get_widget("label7")
+        self._lab_Memory = self._wTree.get_widget("label9")
+        self._lab_Display = self._wTree.get_widget("label11")
+        self._lab_Usb = self._wTree.get_widget("label13")
+        self._lab_Status = self._wTree.get_widget("label15")
 
-        self._img_So = self.wTree.get_widget("image1")
+        self._img_So = self._wTree.get_widget("image1")
 
-        self._btn_main_refresh = self.wTree.get_widget("button3")
-        self._btn_main_start = self.wTree.get_widget("button4")
-        self._btn_main_connect = self.wTree.get_widget("button5")
-        self._btn_main_stop = self.wTree.get_widget("button6")
-        self._checkbutton1 = self.wTree.get_widget("checkbutton1")
+        self._btn_main_refresh = self._wTree.get_widget("button3")
+        self._btn_main_start = self._wTree.get_widget("button4")
+        self._btn_main_connect = self._wTree.get_widget("button5")
+        self._btn_main_stop = self._wTree.get_widget("button6")
+        self._checkbutton1 = self._wTree.get_widget("checkbutton1")
 
-        self._cmb_main_vms = self.wTree.get_widget("combobox1")
+        self._cmb_main_vms = self._wTree.get_widget("combobox1")
         self._liststore = gtk.ListStore(gobject.TYPE_STRING)
         self._cmb_main_vms.set_model(self._liststore)
         cell = gtk.CellRendererText()
