@@ -29,11 +29,16 @@ class Client:
         selected_vm = self._cmb_main_vms.get_active_text().split(" :: ")[1]
         ticket, expiry = dispatcher.ticketVm(selected_vm)
 
-        uri = "spice://%s/?port=%s&tls-port=%s&password=%s" % (self._host,
-                                                               self._port,
-                                                               self._sport,
-                                                               ticket)
+        port = "port="+str(self._port)+"&" if self._port else ""
+        sport = "tls-port="+str(self._sport)+"&" if self._sport else ""
+        uri = "spice://%s/?%s%spassword=%s" % (self._host,
+                                                port,
+                                                sport,
+                                                ticket)
         cmd = ["spicy", "--uri", uri]
+
+        if self._ca_file is not None:
+            cmd.append("--spice-ca-file=%s" % self._ca_file)
 
         subprocess.Popen(cmd)
 
@@ -49,15 +54,14 @@ class Client:
             cert_file.write(cert)
             cert_file.close()
 
-            ca_file = cert_file.name
+            self._ca_file = cert_file.name
         except:
-            ca_file = None
-
+            self._ca_file = None
 
         login, msg = dispatcher.login(url,
                                       username,
                                       password,
-                                      ca_file)
+                                      self._ca_file)
 
         if login:
             self._window1.hide()
