@@ -19,13 +19,13 @@ VarSaida = True
 
 
 class Client:
-    def _quit(*args, **kwargs):
+    def Quit(*args, **kwargs):
         global VarSaida
         VarSaida = False
         gtk.main_quit(*args, **kwargs)
         sys.exit()
 
-    def _connect(self, button=None):
+    def Connect(self, button=None):
         selected_vm = self._cmb_main_vms.get_active_text().split(" :: ")[1]
         ticket, expiry = dispatcher.ticketVm(selected_vm)
 
@@ -42,7 +42,7 @@ class Client:
 
         subprocess.Popen(cmd)
 
-    def _auth(self, button=None):
+    def Auth(self, button=None):
         url = self._ent_auth_server.get_text()
         username = self._ent_auth_user.get_text()
         password = self._ent_auth_pass.get_text()
@@ -66,20 +66,20 @@ class Client:
         if login:
             self._window1.hide()
             self._window2.show()
-            self._list()
-            t = Thread(target=self._status)
+            self.List()
+            t = Thread(target=self.Status)
             t.start()
         else:
             self._sta_auth.push(0, msg)
 
-    def _list(self, button=None):
+    def List(self, button=None):
         self._liststore.clear()
         for vm in dispatcher.getUserVms():
             self._liststore.append([vm.name + " :: " + vm.id])
 
         self._cmb_main_vms.set_active(0)
 
-    def _status(self, button=None):
+    def Status(self, button=None):
         global VarSaida
         while VarSaida:
             selected_vm = self._cmb_main_vms.get_active_text().split(" :: ")[1]
@@ -133,7 +133,7 @@ class Client:
 
             time.sleep(2)
 
-    def _start(self, button=None):
+    def Start(self, button=None):
         selected_vm = self._cmb_main_vms.get_active_text().split(" :: ")[1]
         start, msg, details = dispatcher.startVm(selected_vm)
         if start:
@@ -141,7 +141,7 @@ class Client:
         else:
             self._sta_main.push(0, "%s: %s" % (msg, details))
 
-    def _stop(self, button=None):
+    def Stop(self, button=None):
         selected_vm = self._cmb_main_vms.get_active_text().split(" :: ")[1]
         stop, msg, details = dispatcher.stopVm(selected_vm)
         if stop:
@@ -156,9 +156,9 @@ class Client:
         self._window1 = self.wTree.get_widget("window1")
         self._window2 = self.wTree.get_widget("window2")
         if (self._window1):
-            self._window1.connect("destroy", self._quit)
+            self._window1.connect("destroy", self.Quit)
         if (self._window2):
-            self._window2.connect("destroy", self._quit)
+            self._window2.connect("destroy", self.Quit)
 
         self._btn_auth_ok = self.wTree.get_widget("button1")
         self._btn_auth_cancel = self.wTree.get_widget("button2")
@@ -189,13 +189,13 @@ class Client:
         self._cmb_main_vms.pack_start(cell, True)
         self._cmb_main_vms.add_attribute(cell, 'text', 0)
 
-        self._btn_main_refresh.connect("clicked", self._list)
-        self._btn_main_start.connect("clicked", self._start)
-        self._btn_main_stop.connect("clicked", self._stop)
-        self._btn_main_connect.connect("clicked", self._connect)
+        self._btn_main_refresh.connect("clicked", self.List)
+        self._btn_main_start.connect("clicked", self.Start)
+        self._btn_main_stop.connect("clicked", self.Stop)
+        self._btn_main_connect.connect("clicked", self.Connect)
 
-        self._btn_auth_ok.connect("clicked", self._auth)
-        self._btn_auth_cancel.connect("clicked", quit)
+        self._btn_auth_ok.connect("clicked", self.Auth)
+        self._btn_auth_cancel.connect("clicked", self.Quit)
 
         self._window1.show()
 
